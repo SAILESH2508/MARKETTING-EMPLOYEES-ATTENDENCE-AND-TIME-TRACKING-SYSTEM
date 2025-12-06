@@ -54,6 +54,21 @@ A comprehensive employee management system with facial recognition, attendance t
 - **Interactive Charts** - Matplotlib-powered visualizations
 - **Smooth Animations** - Fade-in effects and transitions
 
+## 📸 Screenshots
+
+### Login Screen
+![Login Screen](screenshots/login_screen.png)
+
+### Employee Dashboard
+![Employee Dashboard](screenshots/employee_dashboard.png)
+
+### Admin Dashboard
+![Admin Dashboard](screenshots/admin_dashboard.png)
+
+### Salary Management
+![Salary Management](screenshots/salary_management.png)
+
+
 ## 💻 System Requirements
 
 ### Required
