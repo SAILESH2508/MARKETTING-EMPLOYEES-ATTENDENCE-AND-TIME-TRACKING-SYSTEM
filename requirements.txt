@@ -1,0 +1,33 @@
+# Core Dependencies
+opencv-python>=4.8.0
+face-recognition>=1.3.0
+numpy>=1.24.0
+Pillow>=10.0.0
+
+# Machine Learning
+scikit-learn>=1.3.0
+pandas>=2.0.0
+
+# Data Visualization
+matplotlib>=3.7.0
+
+# Optional: Enhanced chart interactivity
+mplcursors>=0.5.2
+
+# Database (built-in with Python)
+# sqlite3 - included in Python standard library
+
+# GUI (built-in with Python)
+# tkinter - included in Python standard library
+
+# Additional face recognition dependencies
+dlib>=19.24.0
+face-recognition-models>=0.3.0
+
+# Image processing
+imageio>=2.31.0
+
+# Note: If you encounter issues installing dlib on Windows:
+# 1. Install Visual Studio Build Tools
+# 2. Or use pre-built wheels: pip install dlib-binary
+# 3. Or use conda: conda install -c conda-forge dlib
