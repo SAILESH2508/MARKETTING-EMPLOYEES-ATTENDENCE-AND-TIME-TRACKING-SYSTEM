@@ -1,0 +1,11 @@
+# This file replaces the old conflicting workflow.
+# It is intentionally empty of jobs to stop the errors.
+name: Old Workflow Disabled
+on:
+  push:
+    branches: [ "none" ]
+jobs:
+  dummy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Old workflow disabled"
