@@ -33,7 +33,6 @@ attendance_system.db
 employee_faces/
 models/
 charts/
-screenshots/
 face_recognition_models-*/
 
 # IDEs
@@ -44,3 +43,6 @@ face_recognition_models-*/
 
 # Logs
 *.log
+
+# Exports
+*.csv

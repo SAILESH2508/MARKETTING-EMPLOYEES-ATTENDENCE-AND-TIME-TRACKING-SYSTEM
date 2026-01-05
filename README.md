@@ -4,18 +4,21 @@ A comprehensive employee management system with facial recognition, attendance t
 
 ## 📋 Table of Contents
 
-- [Features](#features)
-- [System Requirements](#system-requirements)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Project Structure](#project-structure)
-- [Usage Guide](#usage-guide)
-- [Modules Overview](#modules-overview)
-- [Database Schema](#database-schema)
-- [ML Features](#ml-features)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
+- [Features](#-features)
+- [System Requirements](#-system-requirements)
+- [Installation](#-installation)
+- [Quick Start](#-quick-start)
+- [Project Structure](#-project-structure)
+- [Detailed Setup Guide](#-detailed-setup-guide)
+- [Usage Guide](#-usage-guide)
+- [Modules Overview](#-modules-overview)
+- [Detailed Module Architecture](#-detailed-module-architecture)
+- [Database Schema](#-database-schema)
+- [ML Features](#-ml-features)
+- [Troubleshooting](#-troubleshooting)
+- [Contributing](#-contributing-to-employee-attendance-system)
+- [Changelog](#-changelog)
+- [License](#-license)
 
 ## ✨ Features
 
@@ -170,14 +173,14 @@ employee-attendance-system/
 │
 ├── 📦 Dashboard Modules (Modular Architecture)
 │   ├── dashboard_modules/
-│   │   ├── ui_helpers.py           # UI components (171 lines)
-│   │   ├── ml_functions.py         # ML models (261 lines)
-│   │   ├── chart_functions.py      # Charts (293 lines)
-│   │   ├── summary_functions.py    # Dashboard cards (734 lines)
-│   │   ├── analytics_functions.py  # Analytics (278 lines)
-│   │   ├── main_dashboard.py       # Main window (178 lines)
-│   │   ├── action_functions.py     # Actions (112 lines)
-│   │   └── app_setup.py            # Setup (101 lines)
+│   │   ├── ui_helpers.py           # UI components
+│   │   ├── ml_functions.py         # ML models
+│   │   ├── chart_functions.py      # Charts
+│   │   ├── summary_functions.py    # Dashboard cards
+│   │   ├── analytics_functions.py  # Analytics
+│   │   ├── main_dashboard.py       # Main window
+│   │   ├── action_functions.py     # Actions
+│   │   └── app_setup.py            # Setup
 │
 ├── 💾 Data & Models
 │   ├── attendance_system.db        # SQLite database
@@ -189,16 +192,12 @@ employee-attendance-system/
 │   └── charts/                     # Generated charts
 │
 ├── 📚 Documentation
-│   ├── README.md                   # This file (comprehensive guide)
-│   ├── SETUP.md                    # Detailed setup instructions
-│   ├── CONTRIBUTING.md             # Contribution guidelines
-│   └── CHANGELOG.md                # Version history
+│   ├── README.md                   # Comprehensive documentation (Merged)
 │
 ├── ⚙️ Configuration
 │   ├── requirements.txt            # Python dependencies
 │   ├── .gitignore                  # Git ignore rules
-│   ├── start.bat                   # Windows startup script
-│   └── start.sh                    # Unix startup script
+│   └── start.bat                   # Windows startup script
 ```
 
 ## 📖 Usage Guide
@@ -493,7 +492,7 @@ train_punctuality_model(cursor, silent=False)
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+We welcome contributions! Please see [Contributing Guidelines](#-contributing-to-employee-attendance-system) below.
 
 ### Development Setup
 1. Fork the repository
@@ -512,7 +511,7 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guid
 
 ## 📄 License
 
-This project is licensed under the MIT License - see [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
 
 ## 🙏 Acknowledgments
 
@@ -529,44 +528,483 @@ For issues, questions, or suggestions:
 - Check existing documentation
 - Review troubleshooting section
 
-## 🔄 Version History
+---
 
-See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
+# 🛠️ Detailed Setup Guide
 
-## 📊 Statistics
+Complete installation guide for the Employee Attendance System.
 
-- **Total Lines of Code**: ~5,000+
-- **Modules**: 8 modular components
-- **Features**: 30+ features
-- **ML Models**: 3 trained models
-- **Supported Employees**: Unlimited
-- **Database**: SQLite (lightweight, no server needed)
-
-## 🎯 Roadmap
-
-### Planned Features
-- [ ] Email notifications
-- [ ] Mobile app integration
-- [ ] Cloud backup
-- [ ] Multi-language support
-- [ ] Advanced reporting
-- [ ] REST API
-- [ ] Docker containerization
-- [ ] Biometric integration
-
-## 🌟 Key Highlights
-
-✅ **Modular Architecture** - 99% reduction in main file size
-✅ **ML-Powered** - Intelligent predictions and insights
-✅ **User-Friendly** - Intuitive interface with smooth animations
-✅ **Secure** - Facial recognition and lockout protection
-✅ **Comprehensive** - Complete attendance and salary management
-✅ **Scalable** - Easy to extend and customize
-✅ **Well-Documented** - Extensive documentation and guides
-✅ **Production-Ready** - Tested and verified
+## Table of Contents
+- [System Requirements](#system-requirements)
+- [Windows Installation](#windows-installation)
+- [Linux Installation](#linux-installation)
+- [macOS Installation](#macos-installation)
+- [Troubleshooting](#troubleshooting)
 
 ---
 
-**Made with ❤️ for efficient employee management**
+## System Requirements
 
-**Status**: ✅ Production Ready | 🚀 Actively Maintained | 📈 Continuously Improving
+### Minimum Requirements
+- **OS:** Windows 10/11, Ubuntu 20.04+, macOS 10.15+
+- **Python:** 3.8 or higher
+- **RAM:** 4GB minimum (8GB recommended)
+- **Storage:** 500MB free space
+- **Camera:** Webcam (built-in or USB)
+- **Internet:** Required for initial setup
+
+### Recommended Specifications
+- **Python:** 3.10 or 3.11
+- **RAM:** 8GB or more
+- **Storage:** 1GB free space
+- **Camera:** HD webcam (720p or higher)
+
+---
+
+## Windows Installation
+
+### Step 1: Install Python
+
+1. Download Python from [python.org](https://www.python.org/downloads/)
+2. Run installer
+3. ✅ **IMPORTANT:** Check "Add Python to PATH"
+4. Click "Install Now"
+5. Verify installation:
+   ```cmd
+   python --version
+   ```
+
+### Step 2: Install Visual C++ Build Tools (for dlib)
+
+**Option A: Visual Studio Build Tools (Recommended)**
+1. Download from [Visual Studio Downloads](https://visualstudio.microsoft.com/downloads/)
+2. Select "Build Tools for Visual Studio"
+3. Install "Desktop development with C++"
+
+**Option B: Use pre-built dlib**
+```cmd
+pip install dlib-binary
+```
+
+### Step 3: Clone Repository
+
+```cmd
+git clone https://github.com/yourusername/employee-attendance-system.git
+cd employee-attendance-system
+```
+
+### Step 4: Create Virtual Environment
+
+```cmd
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+### Step 5: Install Dependencies
+
+```cmd
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### Step 6: Run Application
+
+```cmd
+python emp.py
+```
+
+---
+
+## Linux Installation
+
+### Step 1: Install System Dependencies
+
+**Ubuntu/Debian:**
+```bash
+sudo apt update
+sudo apt install -y python3 python3-pip python3-venv
+sudo apt install -y cmake build-essential
+sudo apt install -y libopencv-dev python3-opencv
+sudo apt install -y libboost-all-dev
+```
+
+### Step 2: Clone Repository
+
+```bash
+git clone https://github.com/yourusername/employee-attendance-system.git
+cd employee-attendance-system
+```
+
+### Step 3: Create Virtual Environment
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### Step 4: Install Dependencies
+
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### Step 5: Run Application
+
+```bash
+python3 emp.py
+```
+
+---
+
+## macOS Installation
+
+### Step 1: Install Homebrew (if not installed)
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+### Step 2: Install Python and Dependencies
+
+```bash
+brew install python@3.11
+brew install cmake
+brew install opencv
+```
+
+### Step 3: Clone Repository
+
+```bash
+git clone https://github.com/yourusername/employee-attendance-system.git
+cd employee-attendance-system
+```
+
+### Step 4: Create Virtual Environment
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### Step 5: Install Dependencies
+
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### Step 6: Run Application
+
+```bash
+python3 emp.py
+```
+
+---
+
+## First Time Setup
+
+### 1. Create First Employee
+
+1. Run application: `python emp.py`
+2. Click "Register New Employee (Face)"
+3. Enter Employee ID: `1`
+4. Enter Name: `Admin User`
+5. Click "Capture Face"
+
+### 2. Add Employee to Database
+
+The employee must be added to the database first:
+
+**Option A: Use Admin Panel**
+1. Click "Admin Login"
+2. Username: `admin`, Password: `admin123`
+3. Click "Manage Employees"
+4. Add employee with ID, Name, Role
+
+**Option B: Direct Database**
+```python
+import sqlite3
+conn = sqlite3.connect("attendance_system.db")
+cursor = conn.cursor()
+cursor.execute("INSERT INTO employees (id, name, role) VALUES (1, 'Admin User', 'Manager')")
+conn.commit()
+conn.close()
+```
+
+### 3. Register Face
+
+After adding to database:
+1. Click "Register New Employee (Face)"
+2. Enter same Employee ID
+3. Capture face
+
+### 4. Test Login
+
+1. Click "Employee Login"
+2. Look at camera
+3. Should recognize and open dashboard
+
+---
+
+# 🤝 Contributing to Employee Attendance System
+
+Thank you for considering contributing to this project! 🎉
+
+## How to Contribute
+
+### Reporting Bugs
+
+If you find a bug, please create an issue with:
+- Clear description of the bug
+- Steps to reproduce
+- Expected vs actual behavior
+- Screenshots (if applicable)
+- Your environment (OS, Python version, etc.)
+
+### Suggesting Features
+
+Feature requests are welcome! Please:
+- Check if the feature already exists
+- Provide clear use case
+- Explain why it would be useful
+- Consider implementation complexity
+
+### Pull Requests
+
+1. **Fork the repository**
+2. **Create a feature branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+3. **Make your changes**
+   - Follow existing code style
+   - Add comments for complex logic
+   - Update documentation if needed
+
+4. **Test your changes**
+   - Ensure all features work
+   - Test on different scenarios
+   - Check for any warnings or errors
+
+5. **Commit your changes**
+   ```bash
+   git commit -m "Add: brief description of changes"
+   ```
+   Use prefixes:
+   - `Add:` for new features
+   - `Fix:` for bug fixes
+   - `Update:` for improvements
+   - `Remove:` for deletions
+   - `Docs:` for documentation
+
+6. **Push to your fork**
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+7. **Create Pull Request**
+   - Provide clear description
+   - Reference related issues
+   - Add screenshots if UI changes
+
+## Code Style Guidelines
+
+### Python
+- Follow PEP 8 style guide
+- Use meaningful variable names
+- Add docstrings for functions
+- Keep functions focused and small
+- Use type hints where appropriate
+
+### Example:
+```python
+def calculate_productivity_score(attendance_data: dict) -> float:
+    """
+    Calculate employee productivity score.
+    
+    Args:
+        attendance_data: Dictionary containing attendance records
+        
+    Returns:
+        float: Productivity score between 0 and 100
+    """
+    # Implementation
+    pass
+```
+
+### Comments
+- Explain WHY, not WHAT
+- Keep comments up-to-date
+- Use clear, concise language
+
+### Database
+- Use parameterized queries (prevent SQL injection)
+- Close connections properly
+- Handle errors gracefully
+
+## Development Setup
+
+1. Clone your fork
+2. Create virtual environment
+3. Install dependencies: `pip install -r requirements.txt`
+4. Make changes
+5. Test thoroughly
+
+## Testing
+
+Before submitting PR:
+- [ ] Test face recognition with multiple faces
+- [ ] Test all CRUD operations
+- [ ] Verify ML models train correctly
+- [ ] Check all navigation buttons work
+- [ ] Test on different screen sizes
+- [ ] Ensure no console errors/warnings
+
+---
+
+# 📜 Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.0.0] - 2024-12-01
+
+### Added
+- 🎉 Initial release
+- Face recognition login system
+- Employee dashboard with ML insights
+- Admin panel for employee management
+- Salary management with interactive charts
+- Automatic ML model training
+- Productivity scoring system
+- Performance trends analysis
+- Work pattern analysis
+- Anomaly detection
+- Attendance heatmap
+- Leaderboard with badges
+- CSV export functionality
+- Dark mode theme
+- Comprehensive documentation
+
+### Features
+- **Authentication**
+  - Biometric face recognition
+  - Secure admin login with SHA-256 hashing
+  - Employee registration system
+
+- **Dashboard**
+  - Real-time attendance tracking
+  - ML-powered predictions
+  - Interactive charts and graphs
+  - Productivity metrics
+
+- **Analytics**
+  - Punctuality predictions
+  - Salary predictions
+  - Anomaly detection
+  - Performance trends
+
+- **Management**
+  - Employee CRUD operations
+  - Salary management
+  - Attendance records
+  - Export to CSV
+
+### Technical
+- Python 3.8+ support
+- SQLite database
+- Tkinter GUI
+- OpenCV for camera handling
+- scikit-learn for ML models
+- matplotlib for visualizations
+
+### Documentation
+- Comprehensive README
+- Detailed setup guide
+- Contributing guidelines
+- MIT License
+
+---
+
+## [Unreleased]
+
+### Planned Features
+- [ ] Email notifications
+- [ ] SMS alerts
+- [ ] Mobile app
+- [ ] Cloud sync
+- [ ] Multi-language support
+- [ ] Advanced reporting
+- [ ] Role-based permissions
+- [ ] Shift management
+- [ ] Leave management
+- [ ] Payroll integration
+
+---
+
+## Version History
+
+### Version 1.0.0 (2024-12-01)
+- Initial public release
+- Core features implemented
+- Documentation complete
+- Ready for production use
+
+---
+
+## How to Update
+
+```bash
+git pull origin main
+pip install -r requirements.txt --upgrade
+python emp.py
+```
+
+---
+
+# 🏗️ Detailed Module Architecture
+
+The employee dashboard has been split into modular files for better organization and maintainability.
+
+## File Structure
+
+```
+dashboard_modules/
+├── __init__.py                 # Package initialization
+├── ui_helpers.py              # UI components and helpers
+├── ml_functions.py            # Machine learning models
+├── chart_functions.py         # Chart and visualization functions
+├── summary_functions.py       # Dashboard summary and cards
+├── analytics_functions.py     # Performance analytics
+├── main_dashboard.py          # Main dashboard window
+├── action_functions.py        # Sign-in/out actions
+└── app_setup.py               # Database setup and app start
+```
+
+## Benefits of Modular Structure
+
+### ✅ Better Organization
+- Each file has a clear, single responsibility
+- Easy to find specific functionality
+- Logical grouping of related functions
+
+### ✅ Improved Maintainability
+- Smaller files are easier to read and understand
+- Changes are isolated to specific modules
+- Reduced risk of breaking unrelated functionality
+
+### ✅ Enhanced Collaboration
+- Multiple developers can work on different modules simultaneously
+- Clear module boundaries reduce merge conflicts
+
+### ✅ Easier Testing
+- Individual modules can be tested independently
+- Mock dependencies more easily
+
+### ✅ Reusability
+- Modules can be imported independently
+- Functions can be reused in other projects

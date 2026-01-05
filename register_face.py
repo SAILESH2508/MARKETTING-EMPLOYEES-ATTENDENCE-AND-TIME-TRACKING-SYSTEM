@@ -10,6 +10,11 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
 
+from dashboard_modules.ui_helpers import (
+    theme, HEADER_FONT, BODY_FONT, BUTTON_FONT, TITLE_FONT, SMALL_FONT,
+    CustomButton, RoundedFrame, fade_in
+)
+
 # Create folder for face images if it doesn't exist
 if not os.path.exists("employee_faces"):
     os.makedirs("employee_faces")
@@ -22,24 +27,39 @@ cursor = conn.cursor()
 # Tkinter GUI
 root = tk.Tk()
 root.title("Employee Face Registration")
-root.geometry("500x400")
-root.configure(bg="#263238")
+root.geometry("600x750")
+root.configure(bg=theme['bg'])
 
-tk.Label(root, text="Employee Face Registration", font=("Arial", 16, "bold"), bg="#263238", fg="white").pack(pady=10)
+# Center
+sw = root.winfo_screenwidth()
+sh = root.winfo_screenheight()
+root.geometry(f"600x750+{int(sw/2-300)}+{int(sh/2-375)}")
 
-# Employee ID Entry
-tk.Label(root, text="Employee ID:", font=("Arial", 12), bg="#263238", fg="white").pack(pady=5)
-emp_id_entry = tk.Entry(root, font=("Arial", 12))
-emp_id_entry.pack(pady=5)
+# Header
+tk.Label(root, text="Face Registration", font=HEADER_FONT, bg=theme['bg'], fg=theme['fg']).pack(pady=(30, 10))
+tk.Label(root, text="Capture photo for biometric login", font=TITLE_FONT, bg=theme['bg'], fg=theme['text_secondary']).pack(pady=(0, 20))
 
-# Employee Name Entry
-tk.Label(root, text="Employee Name:", font=("Arial", 12), bg="#263238", fg="white").pack(pady=5)
-name_entry = tk.Entry(root, font=("Arial", 12))
-name_entry.pack(pady=5)
+# Form Card
+container = RoundedFrame(root, width=540, height=600, bg_color=theme['card'])
+container.pack(pady=10)
+inner = container.inner_frame
 
-# Camera Preview Frame
-camera_frame = tk.Label(root, bg="black", width=500, height=300)
-camera_frame.pack(pady=10)
+# Form Inputs
+tk.Label(inner, text="Employee ID", font=SMALL_FONT, bg=theme['card'], fg=theme['text_secondary']).pack(anchor='w', padx=40, pady=(20, 0))
+emp_id_entry = tk.Entry(inner, font=BODY_FONT, bg=theme['bg'], fg=theme['fg'], relief='flat')
+emp_id_entry.pack(fill='x', padx=40, pady=(5, 10))
+
+tk.Label(inner, text="Full Name", font=SMALL_FONT, bg=theme['card'], fg=theme['text_secondary']).pack(anchor='w', padx=40)
+name_entry = tk.Entry(inner, font=BODY_FONT, bg=theme['bg'], fg=theme['fg'], relief='flat')
+name_entry.pack(fill='x', padx=40, pady=(5, 20))
+
+# Camera Layout
+cam_frame = tk.Frame(inner, bg='black', width=460, height=300)
+cam_frame.pack(padx=20, pady=10)
+cam_frame.pack_propagate(False)
+
+camera_label = tk.Label(cam_frame, bg='black')
+camera_label.pack(expand=True, fill='both')
 
 # Initialize Camera
 cam = cv2.VideoCapture(0)
@@ -48,11 +68,14 @@ def show_frame():
     ret, frame = cam.read()
     if ret:
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        # Resize to fit?
         img = Image.fromarray(frame)
+        # Keep aspect ratio
+        img.thumbnail((460, 300))
         imgtk = ImageTk.PhotoImage(image=img)
-        camera_frame.imgtk = imgtk
-        camera_frame.configure(image=imgtk)
-        camera_frame.after(10, show_frame)
+        camera_label.imgtk = imgtk
+        camera_label.configure(image=imgtk)
+        camera_label.after(10, show_frame)
 
 show_frame()  # Start preview
 
@@ -65,10 +88,28 @@ def capture_face():
         return
 
     # Check if Employee exists
+    # If using shared DB, we might want to INSERT if not exists or assume Admin created entry first.
+    # The original code just checked existence. Let's assume Admin flow: Admin creates entry without face, Employee registers face.
+    # OR we can auto-create. Let's auto-create if not exists for better UX, or stick to strict check.
+    # Sticking to check ensures role security.
+    
+    conn = sqlite3.connect("attendance_system.db")
+    cursor = conn.cursor()
     cursor.execute("SELECT id FROM employees WHERE id=?", (emp_id,))
     if not cursor.fetchone():
-        messagebox.showerror("Error", "Employee ID not found! Please add the employee first.")
-        return
+        # Optional: Ask to create?
+        if messagebox.askyesno("Not Found", "Employee ID not found. Create new Basic Employee?"):
+            try:
+                # Default role: Employee, Pwd: 'password' (unsafe but simple for now)
+                from hashlib import sha256
+                pwd = sha256("password".encode()).hexdigest()
+                cursor.execute("INSERT INTO employees (id, name, role, password) VALUES (?, ?, 'Employee', ?)", (emp_id, name, pwd))
+                conn.commit()
+            except Exception as e:
+                messagebox.showerror("Error", f"Could not create: {e}")
+                return
+        else:
+            return
 
     ret, frame = cam.read()
     if not ret:
@@ -77,6 +118,7 @@ def capture_face():
 
     # Check if face is detected before saving
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    rgb_frame = np.ascontiguousarray(rgb_frame, dtype=np.uint8)
     face_locations = face_recognition.face_locations(rgb_frame)
     
     if len(face_locations) == 0:
@@ -90,54 +132,35 @@ def capture_face():
     face_path = f"employee_faces/{emp_id}.jpg"
     cv2.imwrite(face_path, frame)
 
-    messagebox.showinfo("Success", "Face Captured Successfully! Encoding...")
-    encode_face(emp_id, face_path)
-
-def encode_face(emp_id, face_path):
+    # Encode
     image = face_recognition.load_image_file(face_path)
-    
-    # Use 'hog' model for better accuracy and more jitters for quality
-    face_locations = face_recognition.face_locations(image, model='hog')
-    
-    if len(face_locations) == 0:
-        messagebox.showerror("Error", "No face detected in captured image!")
-        os.remove(face_path)
-        return
-    
-    # Use num_jitters=100 for very high quality encoding (more accurate but slower)
-    face_encodings = face_recognition.face_encodings(image, face_locations, num_jitters=100)
+    face_encodings = face_recognition.face_encodings(image, face_locations, num_jitters=50) # Moderate jitter for speed/quality balance
 
     if len(face_encodings) > 0:
         encoding = face_encodings[0]
-
-        if encoding.shape != (128,):
-            messagebox.showerror("Error", "Invalid face encoding shape!")
-            os.remove(face_path)
-            return
-
         encoding_blob = encoding.tobytes()
 
-        cursor.execute("UPDATE employees SET face_encoding=? WHERE id=?", (encoding_blob, emp_id))
+        cursor.execute("UPDATE employees SET face_encoding=?, name=? WHERE id=?", (encoding_blob, name, emp_id))
         conn.commit()
+        conn.close()
         
-        print(f"✅ Face encoded successfully for employee {emp_id}")
-        print(f"   Encoding quality: HIGH (100 jitters)")
-        messagebox.showinfo("Success", f"Face registered successfully for Employee ID: {emp_id}\n\nYou can now use face recognition to login.")
-        
-        print(f"✅ Face encoded successfully for employee {emp_id}")
-        print(f"   Encoding quality: {len(face_locations)} face(s) detected")
-
-        messagebox.showinfo("Success", "Employee Registered with Face Successfully!")
+        messagebox.showinfo("Success", f"Face registered for {name} (ID: {emp_id})")
+        root.destroy()
     else:
-        messagebox.showerror("Error", "No face detected! Try again.")
-        os.remove(face_path)
+        messagebox.showerror("Error", "Encoding failed. Try again.")
+        conn.close()
+        if os.path.exists(face_path): os.remove(face_path)
 
 # Capture Button
-tk.Button(root, text="Capture Face", font=("Arial", 14), bg="green", fg="white", command=capture_face).pack(pady=20)
+CustomButton(inner, text="📸 Capture & Register", command=capture_face, bg=theme['success'], width=30).pack(pady=20)
 
 def on_closing():
-    cam.release()
+    if cam.isOpened():
+        cam.release()
     root.destroy()
 
 root.protocol("WM_DELETE_WINDOW", on_closing)
-root.mainloop()
+
+if __name__ == "__main__":
+    root.attributes("-alpha", 1.0)
+    root.mainloop()

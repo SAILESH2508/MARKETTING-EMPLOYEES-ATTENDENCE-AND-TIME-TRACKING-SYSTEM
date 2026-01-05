@@ -26,9 +26,11 @@ except Exception as e:
     _SKL_ERR = str(e)
 
 # Theme and constants
-DARK_MODE = {"bg": "#1A1A2E", "fg": "white", "button": "#E94560", "hover": "#FF6F61", "card": "#2E2E2E"}
-LIGHT_MODE = {"bg": "#F0F0F0", "fg": "#1A1A2E", "button": "#007BFF", "hover": "#0056b3", "card": "#FFFFFF"}
-theme = DARK_MODE.copy()
+try:
+    from dashboard_modules.ui_helpers import theme
+except ImportError:
+    theme = {"bg": "#F0F0F0", "fg": "#1A1A2E", "button": "#007BFF", "hover": "#0056b3", "card": "#FFFFFF"}
+
 BUTTON_FONT = ("Arial", 12)
 MODEL_DIR = "models"
 if not os.path.exists(MODEL_DIR):

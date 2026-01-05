@@ -26,9 +26,11 @@ except Exception as e:
     _SKL_ERR = str(e)
 
 # Theme and constants
-DARK_MODE = {"bg": "#1A1A2E", "fg": "white", "button": "#E94560", "hover": "#FF6F61", "card": "#2E2E2E"}
-LIGHT_MODE = {"bg": "#F0F0F0", "fg": "#1A1A2E", "button": "#007BFF", "hover": "#0056b3", "card": "#FFFFFF"}
-theme = DARK_MODE.copy()
+try:
+    from dashboard_modules.ui_helpers import theme
+except ImportError:
+    theme = {"bg": "#F0F0F0", "fg": "#1A1A2E", "button": "#007BFF", "hover": "#0056b3", "card": "#FFFFFF"}
+
 BUTTON_FONT = ("Arial", 12)
 MODEL_DIR = "models"
 if not os.path.exists(MODEL_DIR):
@@ -85,7 +87,7 @@ def get_ml_status(cursor):
 # ------------------
 # ML training + inference
 # ------------------
-def train_punctuality_model(cursor, return_eval=False, silent=False):
+def train_punctuality_model(cursor, return_eval=False, silent=True):
     if not SKLEARN_AVAILABLE:
         if not silent:
             messagebox.showerror("ML Error", "scikit-learn and pandas required. Install with: pip install scikit-learn pandas")
@@ -167,7 +169,7 @@ def predict_punctuality_for_emp(emp_id, cursor):
     else:
         messagebox.showinfo("Prediction", f"{label}")
 
-def train_anomaly_detector(cursor, silent=False):
+def train_anomaly_detector(cursor, silent=True):
     if not SKLEARN_AVAILABLE:
         if not silent:
             messagebox.showerror("ML Error", "scikit-learn and pandas required. Install with: pip install scikit-learn pandas")
@@ -190,7 +192,7 @@ def train_anomaly_detector(cursor, silent=False):
         messagebox.showinfo("ML", "Anomaly detector trained and saved.")
 
 def run_anomaly_scan(cursor, frame):
-    from dashboard_modules.ui_helpers import clear_content, get_db_data_safely
+    from dashboard_modules.ui_helpers import clear_content, get_db_data_safely, apply_treeview_style
     path = os.path.join(MODEL_DIR, "anomaly.pkl")
     if not os.path.exists(path):
         messagebox.showinfo("ML", "Anomaly model not found. Train it first.")
@@ -212,16 +214,34 @@ def run_anomaly_scan(cursor, frame):
     if anomalies.empty:
         tk.Label(frame, text="No anomalies detected.", bg=theme["bg"], fg=theme["fg"]).pack(pady=10)
     else:
-        tree = ttk.Treeview(frame, columns=('Date', 'Sign In', 'Sign Out', 'Employee'), show='headings')
-        tree.heading('Date', text='Date')
-        tree.heading('Sign In', text='Sign In')
-        tree.heading('Sign Out', text='Sign Out')
-        tree.heading('Employee', text='Emp ID')
+        # Define style locally if needed (though global might apply, we ensure headers are visible)
+        try:
+            s = ttk.Style()
+            apply_treeview_style(s)
+        except: pass
+
+        tree_frame = tk.Frame(frame, bg=theme['bg'])
+        tree_frame.pack(padx=10, pady=10, fill='both', expand=True)
+
+        tree = ttk.Treeview(tree_frame, columns=('Date', 'Sign In', 'Sign Out', 'Employee'), show='headings', height=8, style="Dark.Treeview")
+        
+        # Scrollbars
+        vsb = ttk.Scrollbar(tree_frame, orient="vertical", command=tree.yview)
+        hsb = ttk.Scrollbar(tree_frame, orient="horizontal", command=tree.xview)
+        tree.configure(yscroll=vsb.set, xscroll=hsb.set)
+        
+        vsb.pack(side='right', fill='y')
+        hsb.pack(side='bottom', fill='x')
+        tree.pack(fill='both', expand=True)
+
+        tree.heading('Date', text='Date', anchor="center"); tree.column('Date', anchor="center")
+        tree.heading('Sign In', text='Sign In', anchor="center"); tree.column('Sign In', anchor="center")
+        tree.heading('Sign Out', text='Sign Out', anchor="center"); tree.column('Sign Out', anchor="center")
+        tree.heading('Employee', text='Emp ID', anchor="center"); tree.column('Employee', anchor="center")
         for _, row in anomalies.iterrows():
             tree.insert('', 'end', values=(row['date'], row['sign_in'], row['sign_out'], row['emp_id']))
-        tree.pack(padx=10, pady=10, fill='both', expand=True)
 
-def train_salary_predictor(cursor, silent=False):
+def train_salary_predictor(cursor, silent=True):
     if not SKLEARN_AVAILABLE:
         if not silent:
             messagebox.showerror("ML Error", "scikit-learn and pandas required. Install with: pip install scikit-learn pandas")
@@ -278,5 +298,3 @@ def predict_salary(emp_id, cursor):
     pred = model.predict(X_predict)[0]
     messagebox.showinfo("Salary Prediction", f"Predicted base salary: {pred:.2f}")
 
-# ------------------
-# UI Embeds / Charts
