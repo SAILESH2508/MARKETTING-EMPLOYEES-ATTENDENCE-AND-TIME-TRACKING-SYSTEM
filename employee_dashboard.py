@@ -4,6 +4,7 @@ This file imports from modular components for better organization
 """
 
 import warnings
+
 warnings.filterwarnings("ignore", category=FutureWarning, module="sklearn")
 
 # Import in correct order to avoid circular dependencies

@@ -11,32 +11,37 @@ from datetime import datetime
 # Local Modules - importing functions directly to maintain integration
 from employee_dashboard import employee_dashboard
 from admin_dashboard import launch_admin_dashboard
+from dashboard_modules.ui_helpers import theme, RoundedFrame, CustomButton
 
-# ORIGINAL DARK THEME CONSTANTS
-BG_COLOR = "#1A1A2E"
+# ORIGINAL DARK THEME COLORS
+BG_COLOR = "#0A192F"
 FG_COLOR = "white"
-BUTTON_COLOR = "#E94560"
-BUTTON_HOVER = "#FF6F61"
-CARD_COLOR = "#2E2E2E"
+BUTTON_COLOR = "#D32F2F"
+BUTTON_HOVER = "#1A237E"
+CARD_COLOR = "#172A45"
 
 # Fonts
-HEADER_FONT = ("Arial", 25, "bold")
-BODY_FONT = ("Arial", 12)
-BUTTON_FONT = ("Arial", 11, "bold")
+HEADER_FONT = ("Segoe UI", 26, "bold")
+BODY_FONT = ("Segoe UI", 11)
+BUTTON_FONT = ("Segoe UI", 11, "bold")
+
 
 # SQLite Connection
 def get_db_connection():
     return sqlite3.connect("attendance_system.db")
 
+
 # Ensure lockout table (run once)
 try:
     conn = get_db_connection()
-    conn.execute('''
+    conn.execute(
+        """
     CREATE TABLE IF NOT EXISTS lockout_status (
         id TEXT PRIMARY KEY,
         locked_until TEXT
     )
-    ''')
+    """
+    )
     conn.commit()
     conn.close()
 except Exception as e:
@@ -48,6 +53,7 @@ root.title("Employee Attendance System")
 root.geometry("800x600")
 root.configure(bg=BG_COLOR)
 
+
 # Center function
 def center_window(window, width, height):
     screen_width = window.winfo_screenwidth()
@@ -56,7 +62,9 @@ def center_window(window, width, height):
     y = (screen_height // 2) - (height // 2)
     window.geometry(f"{width}x{height}+{x}+{y}")
 
+
 center_window(root, 800, 600)
+
 
 # =========================
 # FACE LOGIN LOGIC
@@ -68,24 +76,42 @@ def face_first_login(root_win):
     center_window(face_window, 700, 600)
     face_window.grab_set()
 
-    tk.Label(face_window, text="Looking for Face...", font=HEADER_FONT, bg=BG_COLOR, fg=FG_COLOR).pack(pady=20)
+    tk.Label(
+        face_window,
+        text="Looking for Face...",
+        font=HEADER_FONT,
+        bg=BG_COLOR,
+        fg=FG_COLOR,
+    ).pack(pady=20)
 
-    # Camera Frame
-    camera_frame = tk.Frame(face_window, bg="black", width=500, height=350, highlightbackground=FG_COLOR, highlightthickness=2)
+    # Camera Frame using RoundedFrame with button/indigo accent border
+    camera_frame = RoundedFrame(
+        face_window,
+        width=520,
+        height=370,
+        corner_radius=15,
+        bg_color="black",
+        border_color=BUTTON_COLOR,
+    )
     camera_frame.pack(pady=10)
-    camera_frame.pack_propagate(False)
 
-    camera_label = tk.Label(camera_frame, bg="black")
-    camera_label.pack(fill='both', expand=True)
+    camera_label = tk.Label(camera_frame.inner_frame, bg="black")
+    camera_label.pack(fill="both", expand=True)
 
-    status_label = tk.Label(face_window, text="Initializing...", font=("Arial", 14), bg=BG_COLOR, fg="#FFD700")
+    status_label = tk.Label(
+        face_window,
+        text="Initializing...",
+        font=("Segoe UI Semibold", 14),
+        bg=BG_COLOR,
+        fg="#FFD700",
+    )
     status_label.pack(pady=10)
 
     # Variables
     retry_count = 0
     max_retries = 80
     running = True
-    
+
     video_capture = cv2.VideoCapture(0)
 
     if not video_capture.isOpened():
@@ -113,7 +139,8 @@ def face_first_login(root_win):
 
     def update_loop():
         nonlocal retry_count
-        if not running: return
+        if not running:
+            return
 
         ret, frame = video_capture.read()
         if not ret:
@@ -133,7 +160,7 @@ def face_first_login(root_win):
         matched = False
         if face_encodings:
             status_label.config(text="Scanning...", fg="cyan")
-            
+
             conn = get_db_connection()
             cursor = conn.cursor()
             cursor.execute("SELECT id, name, face_encoding FROM employees")
@@ -144,15 +171,17 @@ def face_first_login(root_win):
                 if encoding:
                     try:
                         known = np.frombuffer(encoding, dtype=np.float64)
-                        match = face_recognition.compare_faces([known], face_encodings[0], tolerance=0.5)
+                        match = face_recognition.compare_faces(
+                            [known], face_encodings[0], tolerance=0.5
+                        )
                         if match[0]:
                             process_login(emp_id, name)
                             return
                     except:
                         pass
-            
+
             status_label.config(text="Face Not Recognized", fg="red")
-        
+
         retry_count += 1
         if retry_count > max_retries:
             status_label.config(text="Timeout. Try again.", fg="red")
@@ -162,39 +191,81 @@ def face_first_login(root_win):
 
     update_loop()
 
+
 # =========================
 # UI LAYOUT
 # =========================
 
-tk.Label(root, text="EMPLOYEE ATTENDANCE SYSTEM", font=("Impact", 30), bg=BG_COLOR, fg=FG_COLOR).pack(pady=(60, 20))
-tk.Label(root, text="Select Login Mode", font=("Arial", 14), bg=BG_COLOR, fg="gray").pack(pady=10)
+tk.Label(
+    root,
+    text="EMPLOYEE TIME & ATTENDANCE SYSTEM",
+    font=("Segoe UI", 24, "bold"),
+    bg=BG_COLOR,
+    fg=FG_COLOR,
+).pack(pady=(60, 5))
 
-# Card-like Container
-menu_frame = tk.Frame(root, bg=CARD_COLOR, padx=40, pady=40)
-menu_frame.pack(pady=20)
+tk.Label(
+    root,
+    text="MARKETING TEAM PORTAL",
+    font=("Segoe UI Semibold", 11),
+    bg=BG_COLOR,
+    fg=BUTTON_COLOR,
+).pack(pady=(0, 20))
 
-def btn_config(btn):
-    btn.config(font=BUTTON_FONT, bg=BUTTON_COLOR, fg="white", activebackground=BUTTON_HOVER, activeforeground="white", width=25, height=2, bd=0, cursor="hand2")
+tk.Label(
+    root, text="Select Access Mode", font=("Segoe UI", 12), bg=BG_COLOR, fg="#8892B0"
+).pack(pady=5)
+
+# Rounded Card-like Container
+menu_container = RoundedFrame(root, width=420, height=320, bg_color=CARD_COLOR)
+menu_container.pack(pady=10)
+menu_frame = menu_container.inner_frame
+
+
+def btn_config(btn, default_bg=BUTTON_COLOR, hover_bg=BUTTON_HOVER):
+    btn.config(
+        font=BUTTON_FONT,
+        bg=default_bg,
+        fg="white",
+        activebackground=hover_bg,
+        activeforeground="white",
+        width=25,
+        height=2,
+        bd=0,
+        cursor="hand2",
+    )
+    btn.bind("<Enter>", lambda e: btn.config(bg=hover_bg))
+    btn.bind("<Leave>", lambda e: btn.config(bg=default_bg))
+
 
 def open_reg():
     root.iconify()
-    subprocess.Popen(["python", "register_face.py"])
+    import sys
+    subprocess.Popen([sys.executable, "register_face.py"])
 
-b1 = tk.Button(menu_frame, text="👤  Employee Face Login", command=lambda: face_first_login(root))
-btn_config(b1)
+
+b1 = tk.Button(
+    menu_frame, text="👤  Employee Face Login", command=lambda: face_first_login(root)
+)
+btn_config(b1, BUTTON_COLOR, BUTTON_HOVER)
 b1.pack(pady=10)
 
 b2 = tk.Button(menu_frame, text="🔑  Admin Dashboard", command=launch_admin_dashboard)
-btn_config(b2)
+btn_config(b2, BUTTON_COLOR, BUTTON_HOVER)
 b2.pack(pady=10)
 
 b3 = tk.Button(menu_frame, text="📝  Register New Employee", command=open_reg)
-btn_config(b3)
-b3.config(bg="#4CAF50", activebackground="#45a049") # Green for register
+btn_config(b3, BUTTON_COLOR, BUTTON_HOVER)
 b3.pack(pady=10)
 
 # Footer
-tk.Label(root, text="Developed for Marketing Team • v2.0", font=("Arial", 9), bg=BG_COLOR, fg="gray").pack(side='bottom', pady=20)
+tk.Label(
+    root,
+    text="Secure Biometric Time Tracking • v2.1",
+    font=("Segoe UI", 9),
+    bg=BG_COLOR,
+    fg="#8892B0",
+).pack(side="bottom", pady=25)
 
 if __name__ == "__main__":
     root.mainloop()
