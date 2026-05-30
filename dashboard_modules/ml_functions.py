@@ -96,7 +96,7 @@ def load_attendance_df(cursor):
     df["on_time"] = df["sign_in_seconds"].apply(
         lambda s: 1 if s is not None and s <= 9 * 3600 else 0
     )
-    df["dayofweek"] = pd.to_datetime(df["date"]).dt.dayofweek
+    df["dayofweek"] = pd.to_datetime(df["date"]).dt.dayofweek  # type: ignore
     return df, None
 
 
