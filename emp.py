@@ -19,6 +19,7 @@ FG_COLOR = theme["fg"]
 BUTTON_COLOR = theme["button"]
 BUTTON_HOVER = theme["hover"]
 CARD_COLOR = theme["card"]
+TEXT_SECONDARY = theme["text_secondary"]
 
 # Fonts
 HEADER_FONT = ("Segoe UI", 26, "bold")
@@ -198,28 +199,24 @@ def face_first_login(root_win):
 
 tk.Label(
     root,
-    text="EMPLOYEE TIME & ATTENDANCE SYSTEM",
+    text="Marketing Attendance System",
     font=("Segoe UI", 24, "bold"),
     bg=BG_COLOR,
     fg=FG_COLOR,
-).pack(pady=(60, 5))
+).pack(pady=(80, 5))
 
 tk.Label(
     root,
-    text="MARKETING TEAM PORTAL",
-    font=("Segoe UI Semibold", 11),
+    text="BIOMETRIC TIME & ATTENDANCE LOG",
+    font=("Segoe UI Semibold", 10),
     bg=BG_COLOR,
-    fg=BUTTON_COLOR,
-).pack(pady=(0, 20))
+    fg=TEXT_SECONDARY,
+).pack(pady=(0, 30))
 
-tk.Label(
-    root, text="Select Access Mode", font=("Segoe UI", 12), bg=BG_COLOR, fg="#8892B0"
-).pack(pady=5)
-
-# Rounded Card-like Container
-menu_container = RoundedFrame(root, width=420, height=320, bg_color=CARD_COLOR)
-menu_container.pack(pady=10)
-menu_frame = menu_container.inner_frame
+# Center Portal Card
+portal_card = RoundedFrame(root, width=450, height=260, bg_color=CARD_COLOR)
+portal_card.pack(pady=10)
+inner_card = portal_card.inner_frame
 
 
 def btn_config(btn, default_bg=BUTTON_COLOR, hover_bg=BUTTON_HOVER):
@@ -238,34 +235,55 @@ def btn_config(btn, default_bg=BUTTON_COLOR, hover_bg=BUTTON_HOVER):
     btn.bind("<Leave>", lambda e: btn.config(bg=default_bg))
 
 
-def open_reg():
-    root.iconify()
-    import sys
-    subprocess.Popen([sys.executable, "register_face.py"])
-
-
-b1 = tk.Button(
-    menu_frame, text="👤  Employee Face Login", command=lambda: face_first_login(root)
-)
-btn_config(b1, BUTTON_COLOR, BUTTON_HOVER)
-b1.pack(pady=10)
-
-b2 = tk.Button(menu_frame, text="🔑  Admin Dashboard", command=launch_admin_dashboard)
-btn_config(b2, BUTTON_COLOR, BUTTON_HOVER)
-b2.pack(pady=10)
-
-b3 = tk.Button(menu_frame, text="📝  Register New Employee", command=open_reg)
-btn_config(b3, BUTTON_COLOR, BUTTON_HOVER)
-b3.pack(pady=10)
-
-# Footer
 tk.Label(
-    root,
-    text="Secure Biometric Time Tracking • v2.1",
+    inner_card,
+    text="Face Recognition Sign-In",
+    font=("Segoe UI", 16, "bold"),
+    bg=CARD_COLOR,
+    fg=FG_COLOR,
+).pack(pady=(35, 5))
+
+tk.Label(
+    inner_card,
+    text="Ensure you are in a well-lit area before scanning.",
+    font=("Segoe UI", 10),
+    bg=CARD_COLOR,
+    fg=TEXT_SECONDARY,
+).pack(pady=(0, 20))
+
+b_scan = tk.Button(
+    inner_card,
+    text="📸  Scan & Record Attendance",
+    command=lambda: face_first_login(root),
+)
+btn_config(b_scan, BUTTON_COLOR, BUTTON_HOVER)
+b_scan.pack(pady=5)
+
+# Footer Frame for system version and Admin shortcut
+footer = tk.Frame(root, bg=BG_COLOR)
+footer.pack(side="bottom", fill="x", padx=30, pady=25)
+
+tk.Label(
+    footer,
+    text="Secure Biometric Time Tracking • v2.2",
     font=("Segoe UI", 9),
     bg=BG_COLOR,
-    fg="#8892B0",
-).pack(side="bottom", pady=25)
+    fg=TEXT_SECONDARY,
+).pack(side="left")
+
+b_admin = tk.Button(
+    footer,
+    text="🔑 Admin Access",
+    font=("Segoe UI", 9, "bold"),
+    bg=BG_COLOR,
+    fg=BUTTON_COLOR,
+    activebackground=BG_COLOR,
+    activeforeground=BUTTON_HOVER,
+    bd=0,
+    cursor="hand2",
+    command=launch_admin_dashboard,
+)
+b_admin.pack(side="right")
 
 if __name__ == "__main__":
     root.mainloop()

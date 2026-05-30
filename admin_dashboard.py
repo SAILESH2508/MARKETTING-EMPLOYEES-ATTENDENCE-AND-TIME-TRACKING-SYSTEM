@@ -292,6 +292,20 @@ def open_manage_employees():
     btn_config(b3, "#F44336", 8)
     b3.pack(side="left", padx=5)
 
+    def register_face_for_selected():
+        eid = entries["id"].get()
+        name = entries["name"].get()
+        import sys
+        import subprocess
+        if eid and name:
+            subprocess.Popen([sys.executable, "register_face.py", eid, name])
+        else:
+            subprocess.Popen([sys.executable, "register_face.py"])
+
+    b_reg = tk.Button(form_frame, text="📸 Register Face Biometrics", command=register_face_for_selected)
+    btn_config(b_reg, BUTTON_COLOR, 27)
+    b_reg.pack(pady=(15, 0))
+
     # Right List
     list_frame = tk.Frame(container, bg=BG_COLOR)
     list_frame.pack(side="right", fill="both", expand=True, padx=10)
@@ -316,6 +330,20 @@ def open_manage_employees():
     tree.column("Name", width=150, anchor="w")
     tree.heading("Role", text="Role")
     tree.column("Role", width=120, anchor="w")
+
+    def on_row_select(event):
+        selected_item = tree.selection()
+        if not selected_item:
+            return
+        values = tree.item(selected_item[0], "values")
+        if not values:
+            return
+        clear_entries()
+        entries["id"].insert(0, values[0])
+        entries["name"].insert(0, values[1])
+        entries["role"].insert(0, values[2])
+
+    tree.bind("<<TreeviewSelect>>", on_row_select)
 
     tree.pack(fill="both", expand=True)
     refresh_employees()

@@ -96,6 +96,11 @@ name_entry = tk.Entry(
 )
 name_entry.pack(fill="x", padx=40, pady=(5, 20))
 
+import sys
+if len(sys.argv) > 2:
+    emp_id_entry.insert(0, sys.argv[1])
+    name_entry.insert(0, sys.argv[2])
+
 # Camera Layout using RoundedFrame
 cam_container = RoundedFrame(inner, width=460, height=300, corner_radius=12, bg_color="black", border_color="#1F3A60")
 cam_container.pack(padx=20, pady=10)
