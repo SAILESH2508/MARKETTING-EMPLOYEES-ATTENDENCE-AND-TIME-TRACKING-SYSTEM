@@ -34,14 +34,14 @@ conn = sqlite3.connect("attendance_system.db")
 conn.row_factory = sqlite3.Row  # So we can use column names
 cursor = conn.cursor()
 
-# Theme configurations (matching old theme)
-BG_COLOR = "#0A192F"
-FG_COLOR = "white"
-BUTTON_COLOR = "#4CAF50"
-BUTTON_HOVER = "#388E3C"
-CARD_COLOR = "#172A45"
-INPUT_BG = "#0D1E36"
-TEXT_SECONDARY = "#8892B0"
+# Theme configurations (Mapped from global theme)
+BG_COLOR = theme["bg"]
+FG_COLOR = theme["fg"]
+BUTTON_COLOR = theme["button"]
+BUTTON_HOVER = theme["hover"]
+CARD_COLOR = theme["card"]
+INPUT_BG = theme.get("card_border", "#1E2943")
+TEXT_SECONDARY = theme["text_secondary"]
 
 # Tkinter GUI
 root = tk.Tk()

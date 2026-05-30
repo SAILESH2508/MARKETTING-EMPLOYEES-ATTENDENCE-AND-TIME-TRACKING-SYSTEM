@@ -6,15 +6,15 @@ from manage_salaries import SalaryManager
 from dashboard_modules.ui_helpers import theme, RoundedFrame, CustomButton, apply_treeview_style
 import hashlib
 
-# ORIGINAL DARK THEME COLORS
-BG_COLOR = "#0A192F"
-FG_COLOR = "white"
-BUTTON_COLOR = "#4CAF50"
-BUTTON_HOVER = "#388E3C"
-CARD_COLOR = "#172A45"
-INPUT_BG = "#0D1E36"
-LOGIN_BTN_COLOR = "#FFB300"
-LOGIN_BTN_HOVER = "#FFA000"
+# THEME COLORS (Mapped from global theme)
+BG_COLOR = theme["bg"]
+FG_COLOR = theme["fg"]
+CARD_COLOR = theme["card"]
+BUTTON_COLOR = theme["button"]
+BUTTON_HOVER = theme["hover"]
+INPUT_BG = theme.get("card_border", "#1E2943")
+LOGIN_BTN_COLOR = theme["button"]
+LOGIN_BTN_HOVER = theme["hover"]
 
 # Fonts
 HEADER_FONT = ("Segoe UI", 26, "bold")

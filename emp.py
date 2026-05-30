@@ -13,12 +13,12 @@ from employee_dashboard import employee_dashboard
 from admin_dashboard import launch_admin_dashboard
 from dashboard_modules.ui_helpers import theme, RoundedFrame, CustomButton
 
-# ORIGINAL DARK THEME COLORS
-BG_COLOR = "#0A192F"
-FG_COLOR = "white"
-BUTTON_COLOR = "#D32F2F"
-BUTTON_HOVER = "#1A237E"
-CARD_COLOR = "#172A45"
+# THEME COLORS (Mapped from global theme)
+BG_COLOR = theme["bg"]
+FG_COLOR = theme["fg"]
+BUTTON_COLOR = theme["button"]
+BUTTON_HOVER = theme["hover"]
+CARD_COLOR = theme["card"]
 
 # Fonts
 HEADER_FONT = ("Segoe UI", 26, "bold")

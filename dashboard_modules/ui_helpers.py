@@ -26,31 +26,31 @@ import threading
 # "Classic Dark" aesthetic (Matches emp.py / admin_dashboard.py)
 # Matches user request: "Global Dark Theme" but "not black"
 DARK_MODE = {
-    "bg": "#0A192F",  # Premium Deep Dark Blue
-    "fg": "#FFFFFF",  # White text
-    "card": "#172A45",  # Rich dark blue card
-    "card_border": "#1F3A60",  # Medium dark blue border
-    "button": "#E94560",  # Classic Pink/Red Button
+    "bg": "#0A0F1D",  # Premium deep dark navy
+    "fg": "#F8FAFC",  # Crisp off-white
+    "card": "#131B2E",  # Rich navy card
+    "card_border": "#1E2943",  # Deep card border
+    "button": "#6366F1",  # Sleek Indigo button
     "button_fg": "#FFFFFF",
-    "hover": "#FF6F61",
-    "success": "#4CAF50",
-    "warning": "#FF9800",
-    "error": "#F44336",
-    "text_secondary": "#8892B0",  # Light steel blue
+    "hover": "#4F46E5",  # Darker Indigo hover
+    "success": "#10B981",  # Emerald success
+    "warning": "#F59E0B",  # Amber warning
+    "error": "#EF4444",  # Red error
+    "text_secondary": "#94A3B8",  # Slate-400 secondary text
 }
 
 LIGHT_MODE = {
-    "bg": "#F0F2F5",
-    "fg": "#2D3436",
+    "bg": "#F8FAFC",
+    "fg": "#0F172A",
     "card": "#FFFFFF",
-    "card_border": "#DCDDE1",
-    "button": "#0984E3",
+    "card_border": "#E2E8F0",
+    "button": "#3B82F6",
     "button_fg": "#FFFFFF",
-    "hover": "#74B9FF",
-    "success": "#00B894",
-    "warning": "#F1C40F",
-    "error": "#D63031",
-    "text_secondary": "#636E72",
+    "hover": "#2563EB",
+    "success": "#10B981",
+    "warning": "#F59E0B",
+    "error": "#EF4444",
+    "text_secondary": "#64748B",
 }
 
 # Current Theme - Set to DARK_MODE by default

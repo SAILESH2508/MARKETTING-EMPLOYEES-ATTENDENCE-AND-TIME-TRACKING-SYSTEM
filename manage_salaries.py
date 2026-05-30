@@ -48,13 +48,13 @@ except ImportError:
 DB_PATH = "attendance_system.db"
 ICONS_DIR = "icons"
 
-# ORIGINAL DARK THEME COLORS
-BG = "#0A192F"
-FG = "white"
-ACCENT = "#1976D2"
-CARD_COLOR = "#172A45"
-TEXT_SECONDARY = "#8892B0"
-INPUT_BG = "#0D1E36"
+# THEME COLORS (Mapped from global theme)
+BG = theme["bg"]
+FG = theme["fg"]
+ACCENT = theme["button"]
+CARD_COLOR = theme["card"]
+TEXT_SECONDARY = theme["text_secondary"]
+INPUT_BG = theme.get("card_border", "#1E2943")
 
 # Chart configs
 PIE_TOP_N = 8
@@ -245,15 +245,15 @@ class SalaryManager:
         btn_box.pack(pady=20, fill="x", padx=20)
 
         b_update = tk.Button(btn_box, text="Update", command=self.update_salary)
-        style_btn(b_update, "#1976D2", "#1565C0", width=10)
+        style_btn(b_update, theme["button"], theme["hover"], width=10)
         b_update.pack(side=LEFT, padx=5)
 
         b_add = tk.Button(btn_box, text="Add", command=self.add_salary)
-        style_btn(b_add, "#388E3C", "#2E7D32", width=10)
+        style_btn(b_add, theme["success"], "#059669", width=10)
         b_add.pack(side=LEFT, padx=5)
 
         b_clear = tk.Button(btn_box, text="Clear", command=self.clear_entries)
-        style_btn(b_clear, "#FBC02D", "#F9A825", fg_color="black", width=8)
+        style_btn(b_clear, theme["warning"], "#D97706", fg_color="black", width=8)
         b_clear.pack(side=LEFT, padx=5)
 
     def build_table(self, parent):
@@ -269,11 +269,11 @@ class SalaryManager:
         self.search_entry.pack(side=LEFT, padx=10)
         
         b_go = tk.Button(search_box, text="Go", command=self.search)
-        style_btn(b_go, "#0288D1", "#0277BD", width=5)
+        style_btn(b_go, theme["button"], theme["hover"], width=5)
         b_go.pack(side=LEFT)
 
         b_all = tk.Button(search_box, text="Show All", command=self.fetch_all)
-        style_btn(b_all, "#1E3A8A", "#172554", width=10)
+        style_btn(b_all, theme["card_border"], "#334155", width=10)
         b_all.pack(side=LEFT, padx=10)
 
         # Style for Treeview wrapper to handle scrollbars perfectly
