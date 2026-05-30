@@ -2,7 +2,7 @@ import warnings
 
 warnings.filterwarnings("ignore", category=FutureWarning, module="sklearn")
 try:
-    from sklearn.exceptions import InconsistentVersionWarning
+    from sklearn.exceptions import InconsistentVersionWarning  # type: ignore
 
     warnings.filterwarnings("ignore", category=InconsistentVersionWarning)
 except ImportError:
