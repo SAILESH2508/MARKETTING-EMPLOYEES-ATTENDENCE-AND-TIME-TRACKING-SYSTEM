@@ -26,6 +26,15 @@ try:
 except Exception as e:
     SKLEARN_AVAILABLE = False
     _SKL_ERR = str(e)
+    from typing import Any
+    pd: Any = None
+    LogisticRegression: Any = None
+    LinearRegression: Any = None
+    IsolationForest: Any = None
+    train_test_split: Any = None
+    accuracy_score: Any = None
+    CalibratedClassifierCV: Any = None
+    pickle: Any = None
 
 # Updated Import from ui_helpers
 try:
@@ -56,6 +65,18 @@ except ImportError:
         "error": "#F44336",
     }
     MODEL_DIR = "models"
+    HEADER_FONT = ("Segoe UI", 26, "bold")
+    SUBHEADER_FONT = ("Segoe UI", 16, "bold")
+    TITLE_FONT = ("Segoe UI", 14, "bold")
+    BODY_FONT = ("Segoe UI", 11)
+    SMALL_FONT = ("Segoe UI", 9)
+
+    class FallbackRoundedFrame(tk.Frame):
+        def __init__(self, parent, **kwargs):
+            bg_color = kwargs.pop("bg_color", theme["card"])
+            super().__init__(parent, bg=bg_color, **kwargs)
+            self.inner_frame = self
+    RoundedFrame = FallbackRoundedFrame
 
 
 def get_predicted_salary_value(emp_id, cursor):

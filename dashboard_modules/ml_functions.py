@@ -26,6 +26,15 @@ try:
 except Exception as e:
     SKLEARN_AVAILABLE = False
     _SKL_ERR = str(e)
+    from typing import Any
+    pd: Any = None
+    LogisticRegression: Any = None
+    LinearRegression: Any = None
+    IsolationForest: Any = None
+    train_test_split: Any = None
+    accuracy_score: Any = None
+    CalibratedClassifierCV: Any = None
+    pickle: Any = None
 
 # Theme and constants
 try:
@@ -115,12 +124,14 @@ def train_punctuality_model(cursor, return_eval=False, silent=True):
             )
         return None
     df, err = load_attendance_df(cursor)
-    if err:
+    if err or df is None:
         if not silent:
-            messagebox.showinfo("ML", err)
+            messagebox.showinfo("ML", err or "No data available")
         return None
-    hist = df.groupby("emp_id")["sign_in_seconds"].mean().rename("mean_sign_in")
-    df = df.join(hist, on="emp_id")
+    hist = df.groupby("emp_id")["sign_in_seconds"].mean()
+    if hasattr(hist, "name"):
+        setattr(hist, "name", "mean_sign_in")
+    df = df.join(hist, on="emp_id")  # type: ignore
     X = df[["dayofweek", "mean_sign_in"]].fillna(df["mean_sign_in"].mean())
     y = df["on_time"]
     if len(df) < 10:
@@ -187,13 +198,13 @@ def predict_punctuality_for_emp(emp_id, cursor):
     with open(path, "rb") as f:
         clf = pickle.load(f)
     df, err = load_attendance_df(cursor)
-    if err:
-        messagebox.showinfo("ML", err)
+    if err or df is None:
+        messagebox.showinfo("ML", err or "No data available")
         return
     import pandas as pd
 
     emp_mean = df[df["emp_id"] == emp_id]["sign_in_seconds"].mean()
-    if pd.isna(emp_mean):
+    if pd.isna(emp_mean):  # type: ignore
         emp_mean = df["sign_in_seconds"].mean()
     dayofweek = datetime.now().weekday()
     X = pd.DataFrame([[dayofweek, emp_mean]], columns=["dayofweek", "mean_sign_in"])
@@ -215,16 +226,16 @@ def train_anomaly_detector(cursor, silent=True):
             )
         return
     df, err = load_attendance_df(cursor)
-    if err:
+    if err or df is None:
         if not silent:
-            messagebox.showinfo("ML", err)
+            messagebox.showinfo("ML", err or "No data available")
         return
     X = df[["sign_in_seconds"]].fillna(df["sign_in_seconds"].median())
     if len(X) < 10:
         if not silent:
             messagebox.showinfo("ML", "Not enough data to train anomaly detector.")
         return
-    iso = IsolationForest(contamination=0.05, random_state=42)
+    iso = IsolationForest(contamination=0.05, random_state=42)  # type: ignore
     iso.fit(X)
     with open(os.path.join(MODEL_DIR, "anomaly.pkl"), "wb") as f:
         pickle.dump(iso, f)
@@ -247,8 +258,8 @@ def run_anomaly_scan(cursor, frame):
         messagebox.showerror("ML Error", "scikit-learn and pandas required.")
         return
     df, err = load_attendance_df(cursor)
-    if err:
-        messagebox.showinfo("ML", err)
+    if err or df is None:
+        messagebox.showinfo("ML", err or "No data available")
         return
     with open(path, "rb") as f:
         iso = pickle.load(f)
@@ -289,7 +300,7 @@ def run_anomaly_scan(cursor, frame):
         # Scrollbars
         vsb = ttk.Scrollbar(tree_frame, orient="vertical", command=tree.yview)
         hsb = ttk.Scrollbar(tree_frame, orient="horizontal", command=tree.xview)
-        tree.configure(yscroll=vsb.set, xscroll=hsb.set)
+        tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)  # type: ignore
 
         vsb.pack(side="right", fill="y")
         hsb.pack(side="bottom", fill="x")

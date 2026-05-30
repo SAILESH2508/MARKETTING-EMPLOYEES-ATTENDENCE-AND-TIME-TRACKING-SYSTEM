@@ -196,7 +196,7 @@ def open_manage_employees():
         e = tk.Entry(
             form_frame,
             font=BODY_FONT,
-            show="*" if label == "Password" else None,
+            show="*" if label == "Password" else "",
             bg=INPUT_BG,
             fg=FG_COLOR,
             insertbackground=FG_COLOR,

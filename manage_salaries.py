@@ -8,12 +8,12 @@ import sqlite3
 import csv
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
-from tkinter import *
+from tkinter import BOTH, LEFT, RIGHT, Y, X, CENTER, W, E, END, BOTTOM, HORIZONTAL, VERTICAL, TOP
 import matplotlib
 
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk  # type: ignore
 from PIL import Image, ImageTk
 
 try:
@@ -552,13 +552,16 @@ class SalaryManager:
             vals.append(other_sum)
 
         fig, ax = plt.subplots(figsize=(9, 6))
-        wedges, texts, autotexts = ax.pie(
+        pie_result = ax.pie(
             vals,
             labels=labels,
             autopct="%1.1f%%",
             startangle=140,
             textprops={"color": FG},
         )
+        wedges = pie_result[0]
+        texts = pie_result[1]
+        autotexts = pie_result[2] if len(pie_result) > 2 else []
         ax.set_title("Salary Distribution", color=FG)
 
         self.embed_figure_in_scrollable_toplevel(fig, "Salary Pie Chart")

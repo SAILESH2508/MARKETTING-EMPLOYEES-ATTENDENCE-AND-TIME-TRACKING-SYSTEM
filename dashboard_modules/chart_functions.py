@@ -8,6 +8,7 @@ from datetime import datetime
 import calendar
 import sqlite3
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 from dashboard_modules.matplotlib_config import *
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -116,7 +117,7 @@ def show_salary_pie(frame, emp_id, cursor):
             )  # More space
 
             # Create pie chart with optimized text positioning
-            wedges, texts, autotexts = ax.pie(
+            pie_result = ax.pie(
                 values,
                 labels=None,  # Remove labels from pie chart to avoid overlap
                 autopct=lambda pct: (
@@ -130,12 +131,15 @@ def show_salary_pie(frame, emp_id, cursor):
                 shadow=True,  # Add shadow for better visibility
                 radius=0.8,  # Smaller radius to leave more space for labels
             )
+            wedges = pie_result[0]
+            texts = pie_result[1]
+            autotexts = pie_result[2] if len(pie_result) > 2 else []
 
             # Style the percentage text
             for autotext in autotexts:
                 autotext.set_color("white")
                 autotext.set_fontsize(11)
-                autotext.set_weight("bold")
+                autotext.set_fontweight("bold")
                 autotext.set_bbox(
                     dict(boxstyle="round,pad=0.3", facecolor="black", alpha=0.7)
                 )
@@ -144,7 +148,7 @@ def show_salary_pie(frame, emp_id, cursor):
             legend_elements = []
             for i, (label, value, color) in enumerate(zip(labels, values, colors)):
                 legend_elements.append(
-                    plt.Rectangle(
+                    Rectangle(
                         (0, 0), 1, 1, facecolor=color, label=f"{label}: ₹{value:,.0f}"
                     )
                 )

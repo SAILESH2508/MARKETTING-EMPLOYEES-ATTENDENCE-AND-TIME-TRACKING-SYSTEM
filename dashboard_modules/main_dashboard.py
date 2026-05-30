@@ -57,9 +57,36 @@ try:
     )
 except ImportError as e:
     print(f"ML functions import error: {e}")
+    from typing import Any, Tuple
 
-    def get_ml_status(cursor):
+    def get_ml_status(cursor) -> Any:
         return "ML functions not available"
+
+    def load_attendance_df(cursor) -> Tuple[Any, Any]:
+        return None, "ML functions not available"
+
+    def train_punctuality_model(cursor, return_eval=False, silent=True) -> Any:
+        if not silent:
+            messagebox.showerror("Error", "ML functions not available")
+        return None
+
+    def train_anomaly_detector(cursor, silent=True) -> Any:
+        if not silent:
+            messagebox.showerror("Error", "ML functions not available")
+        return None
+
+    def train_salary_predictor(cursor, silent=True) -> Any:
+        if not silent:
+            messagebox.showerror("Error", "ML functions not available")
+        return None
+
+    def predict_punctuality_for_emp(emp_id, cursor) -> Any:
+        messagebox.showerror("Error", "ML functions not available")
+        return None
+
+    def predict_salary(emp_id, cursor) -> Any:
+        messagebox.showerror("Error", "ML functions not available")
+        return None
 
 
 # Global reference for the content frame (used for navigation)
@@ -669,8 +696,8 @@ def show_anomaly_results(frame, cursor):
             return
 
         df, err = load_attendance_df(cursor)
-        if err:
-            tk.Label(frame, text=f"❌ Error: {err}", bg=theme["card"], fg="red").pack(
+        if err or df is None:
+            tk.Label(frame, text=f"❌ Error: {err or 'DataFrame is None'}", bg=theme["card"], fg="red").pack(
                 pady=10
             )
             return
@@ -682,7 +709,7 @@ def show_anomaly_results(frame, cursor):
 
         X = df[["sign_in_seconds"]].fillna(df["sign_in_seconds"].median())
         preds = iso.predict(X)
-        anomalies = df[preds == -1]
+        anomalies = df[preds == -1]  # type: ignore
 
         if anomalies.empty:
             tk.Label(
@@ -727,10 +754,10 @@ def show_ml_insights(frame, emp_id, cursor):
     try:
         # Get attendance data for insights
         df, err = load_attendance_df(cursor)
-        if err:
+        if err or df is None:
             tk.Label(
                 frame,
-                text=f"No data for insights: {err}",
+                text=f"No data for insights: {err or 'DataFrame is None'}",
                 bg=theme["card"],
                 fg=theme["fg"],
             ).pack(pady=10)

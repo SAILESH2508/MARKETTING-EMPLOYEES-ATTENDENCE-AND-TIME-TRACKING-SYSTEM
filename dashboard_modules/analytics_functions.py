@@ -338,8 +338,8 @@ def show_work_patterns(frame, emp_id, cursor):
                     day_rates[day] = stats["on_time"] / stats["total"]
 
             if day_rates:
-                best_day = max(day_rates, key=day_rates.get)
-                worst_day = min(day_rates, key=day_rates.get)
+                best_day = max(day_rates, key=lambda k: day_rates[k])
+                worst_day = min(day_rates, key=lambda k: day_rates[k])
 
                 # Best day
                 best_frame = tk.Frame(content_frame, bg=theme["card"])

@@ -218,6 +218,10 @@ class CustomButton(tk.Button):
         bg = bg or theme["button"]
         fg = fg or theme.get("button_fg", "white")
 
+        btn_kwargs = {}
+        if width is not None:
+            btn_kwargs["width"] = width
+
         # Extract invalid options for tk.Button if necessary, but **kwargs usually handles standard ones like height
         super().__init__(
             parent,
@@ -231,7 +235,7 @@ class CustomButton(tk.Button):
             bd=0,
             cursor="hand2",
             command=command,
-            width=width,
+            **btn_kwargs,
             **kwargs,
         )
 

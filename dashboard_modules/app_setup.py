@@ -29,7 +29,9 @@ except Exception as e:
 
 # Theme and constants from ui_helpers (or define local fallback)
 try:
-    from dashboard_modules.ui_helpers import theme, DARK_MODE, LIGHT_MODE, RoundedFrame
+    from dashboard_modules.ui_helpers import theme, DARK_MODE, LIGHT_MODE
+    from dashboard_modules.ui_helpers import RoundedFrame as ImportRoundedFrame
+    RoundedFrame = ImportRoundedFrame
 except ImportError:
     DARK_MODE = {
         "bg": "#0A192F",
@@ -47,12 +49,13 @@ except ImportError:
     }
     theme = DARK_MODE.copy()
 
-    class RoundedFrame(tk.Frame):
+    class FallbackRoundedFrame(tk.Frame):
         # Fallback simple frame
         def __init__(self, parent, **kwargs):
             bg_color = kwargs.pop("bg_color", theme["card"])
             super().__init__(parent, bg=bg_color, **kwargs)
             self.inner_frame = self
+    RoundedFrame = FallbackRoundedFrame
 
 
 MODEL_DIR = "models"
