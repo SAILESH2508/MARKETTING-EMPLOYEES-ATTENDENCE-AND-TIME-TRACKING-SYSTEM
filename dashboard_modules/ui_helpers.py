@@ -214,9 +214,10 @@ class ToolTip:
 
 
 class CustomButton(tk.Button):
-    def __init__(self, parent, text, command, bg=None, fg=None, width=None, **kwargs):
+    def __init__(self, parent, text, command, bg=None, fg=None, width=None, hover_color=None, **kwargs):
         bg = bg or theme["button"]
         fg = fg or theme.get("button_fg", "white")
+        hover = hover_color or theme["hover"]
 
         btn_kwargs = {}
         if width is not None:
@@ -229,7 +230,7 @@ class CustomButton(tk.Button):
             font=BUTTON_FONT,
             bg=bg,
             fg=fg,
-            activebackground=theme["hover"],
+            activebackground=hover,
             activeforeground=fg,
             relief="flat",
             bd=0,
@@ -239,7 +240,7 @@ class CustomButton(tk.Button):
             **kwargs,
         )
 
-        self.bind("<Enter>", lambda e: self.config(bg=theme["hover"]))
+        self.bind("<Enter>", lambda e: self.config(bg=hover))
         self.bind("<Leave>", lambda e: self.config(bg=bg))
 
 

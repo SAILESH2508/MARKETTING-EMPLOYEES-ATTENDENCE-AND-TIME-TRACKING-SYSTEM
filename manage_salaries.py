@@ -521,6 +521,7 @@ class SalaryManager:
             canvas.config(scrollregion=canvas.bbox("all"))
 
         inner.bind("<Configure>", _on_config)
+        return canvas_fig
 
     def draw_pie_chart(self):
         conn = sqlite3.connect(DB_PATH)
@@ -564,7 +565,9 @@ class SalaryManager:
         autotexts = pie_result[2] if len(pie_result) > 2 else []
         ax.set_title("Salary Distribution", color=FG)
 
-        self.embed_figure_in_scrollable_toplevel(fig, "Salary Pie Chart")
+        canvas = self.embed_figure_in_scrollable_toplevel(fig, "Salary Pie Chart")
+        from dashboard_modules.safe_charts import enable_pie_hover
+        enable_pie_hover(canvas, fig, ax, wedges, labels, vals, is_currency=True)
 
     def draw_bar_chart(self):
         conn = sqlite3.connect(DB_PATH)
@@ -581,12 +584,14 @@ class SalaryManager:
         nets = [x[1] for x in items]
 
         fig, ax = plt.subplots(figsize=(10, 6))
-        ax.barh(names, nets, color=ACCENT)
+        bars = ax.barh(names, nets, color=ACCENT)
         ax.set_xlabel("Net Salary", color=FG)
         ax.set_title("Salary Rankings", color=FG)
         ax.invert_yaxis()
 
-        self.embed_figure_in_scrollable_toplevel(fig, "Salary Rankings")
+        canvas = self.embed_figure_in_scrollable_toplevel(fig, "Salary Rankings")
+        from dashboard_modules.safe_charts import enable_bar_hover
+        enable_bar_hover(canvas, fig, ax, list(bars), names, nets, is_horizontal=True, is_currency=True)
 
 
 if __name__ == "__main__":

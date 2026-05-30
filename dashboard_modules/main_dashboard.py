@@ -517,47 +517,36 @@ def setup_ml_tab(tab_ml, emp_id, cursor):
         btn_frame1 = tk.Frame(training_content, bg=theme["card"])
         btn_frame1.pack(fill="x", pady=2)
 
-        tk.Button(
+        CustomButton(
             btn_frame1,
             text="Train Punctuality Model",
             command=lambda: train_punctuality_model(cursor, silent=False),
             bg=theme["button"],
-            fg="white",
-            font=BUTTON_FONT,
-            relief="flat",
         ).pack(side="left", padx=(0, 10))
 
-        tk.Button(
+        CustomButton(
             btn_frame1,
             text="Train Anomaly Detector",
             command=lambda: train_anomaly_detector(cursor, silent=False),
             bg=theme["button"],
-            fg="white",
-            font=BUTTON_FONT,
-            relief="flat",
         ).pack(side="left")
 
         btn_frame2 = tk.Frame(training_content, bg=theme["card"])
         btn_frame2.pack(fill="x", pady=2)
 
-        tk.Button(
+        CustomButton(
             btn_frame2,
             text="Train Salary Predictor",
             command=lambda: train_salary_predictor(cursor, silent=False),
             bg=theme["button"],
-            fg="white",
-            font=BUTTON_FONT,
-            relief="flat",
         ).pack(side="left", padx=(0, 10))
 
-        tk.Button(
+        CustomButton(
             btn_frame2,
             text="Train All Models",
             command=lambda: train_all_models(cursor),
             bg=theme["hover"],
-            fg="white",
-            font=BUTTON_FONT,
-            relief="flat",
+            hover_color=theme["button"],
         ).pack(side="left")
 
         # Predictions Section using RoundedFrame
@@ -578,24 +567,20 @@ def setup_ml_tab(tab_ml, emp_id, cursor):
         pred_btn_frame1 = tk.Frame(pred_content, bg=theme["card"])
         pred_btn_frame1.pack(fill="x", pady=2)
 
-        tk.Button(
+        CustomButton(
             pred_btn_frame1,
             text="Predict Punctuality",
             command=lambda: predict_punctuality_for_emp(emp_id, cursor),
             bg="#4CAF50",
-            fg="white",
-            font=BUTTON_FONT,
-            relief="flat",
+            hover_color="#388E3C",
         ).pack(side="left", padx=(0, 10))
 
-        tk.Button(
+        CustomButton(
             pred_btn_frame1,
             text="Predict Salary",
             command=lambda: predict_salary(emp_id, cursor),
             bg="#4CAF50",
-            fg="white",
-            font=BUTTON_FONT,
-            relief="flat",
+            hover_color="#388E3C",
         ).pack(side="left")
 
         # Right column - Analysis Results
@@ -617,14 +602,12 @@ def setup_ml_tab(tab_ml, emp_id, cursor):
         ).pack(anchor="w", pady=(0, 10))
 
         # Anomaly scan button
-        tk.Button(
+        CustomButton(
             anomaly_content,
             text="Run Anomaly Scan",
             command=lambda: show_anomaly_results(anomaly_results_frame, cursor),
             bg="#FF9800",
-            fg="white",
-            font=BUTTON_FONT,
-            relief="flat",
+            hover_color="#F57C00",
         ).pack(anchor="w", pady=(0, 10))
 
         # Results area

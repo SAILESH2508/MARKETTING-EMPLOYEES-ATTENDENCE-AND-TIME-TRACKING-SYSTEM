@@ -175,6 +175,8 @@ def show_salary_pie(frame, emp_id, cursor):
             ax.axis("equal")
 
             canvas = FigureCanvasTkAgg(fig, master=left_frame)
+            from dashboard_modules.safe_charts import enable_pie_hover
+            enable_pie_hover(canvas, fig, ax, wedges, labels, values)
             canvas.draw()
             canvas.get_tk_widget().pack(fill="both", expand=True, padx=10, pady=10)
             plt.close(fig)
@@ -662,6 +664,8 @@ def show_attendance_bar(frame, emp_id, cursor):
             )
 
         canvas = FigureCanvasTkAgg(fig, master=frame)
+        from dashboard_modules.safe_charts import enable_bar_hover
+        enable_bar_hover(canvas, fig, ax, list(bars), ["On-Time", "Late"], [on_time, late], is_horizontal=False, is_currency=False)
         canvas.draw()
         canvas.get_tk_widget().pack(fill="both", expand=True)
         plt.close(fig)
