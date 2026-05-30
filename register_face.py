@@ -116,7 +116,7 @@ def show_frame():
         # Keep aspect ratio
         img.thumbnail((460, 300))
         imgtk = ImageTk.PhotoImage(image=img)
-        camera_label.imgtk = imgtk
+        camera_label.imgtk = imgtk  # type: ignore
         camera_label.configure(image=imgtk)
         camera_label.after(10, show_frame)
 

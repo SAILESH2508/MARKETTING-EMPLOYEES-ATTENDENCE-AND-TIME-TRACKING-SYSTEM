@@ -150,7 +150,7 @@ def face_first_login(root_win):
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         img = Image.fromarray(rgb_frame)
         imgtk = ImageTk.PhotoImage(image=img)
-        camera_label.imgtk = imgtk
+        camera_label.imgtk = imgtk  # type: ignore
         camera_label.configure(image=imgtk)
 
         # Detection
