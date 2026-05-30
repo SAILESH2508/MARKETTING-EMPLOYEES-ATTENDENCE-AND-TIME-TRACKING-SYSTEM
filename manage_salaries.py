@@ -94,6 +94,8 @@ def style_btn(btn, bg_color, hover_color, fg_color="white", width=12, height=1):
 
 
 class SalaryManager:
+    root: tk.Tk | tk.Toplevel
+
     def __init__(self, root=None):
         if root:
             self.root = tk.Toplevel(root)
